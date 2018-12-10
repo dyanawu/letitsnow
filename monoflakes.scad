@@ -1,6 +1,6 @@
 /*
   Project: Xmas 2018 What Do I Do Project
-  Part: Hex Snowflake Cookie Cutter Generator
+  Part: Hex Snowflake Cookie Cutter Generator - Thingiverse Customizer Version (MONOLITH)
 
   dwu <dyanawu@gmail.com>
 */
