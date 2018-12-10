@@ -6,12 +6,11 @@
 */
 
 use <MCAD/array/along_curve.scad>
-use <MCAD/array/polar.scad>
 use <MCAD/shapes/2Dshapes.scad>
 include <MCAD/units/metric.scad>
 
 //length of one edge of cookie
-edge_l = 20;
+edge_l = 25;
 
 //cutter edge thickness
 edge_w = 1;

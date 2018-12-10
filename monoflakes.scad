@@ -16,6 +16,7 @@ cookie_t = 6;
 
 //snowflake hub
 hub = 3;
+hub_s = 6;
 
 //snowflake dots
 dot = 3; // maximum of 0.43* edge_l if you want non-touching dots but who cares
@@ -51,6 +52,12 @@ strut_w = 4;
 $fn = 50;
 
 // end vars
+
+/* from MCAD/units/metric.scad
+ */
+X = [1, 0, 0];
+Y = [0, 1, 0];
+Z = [0, 0, 1];
 
 /* mcad_rotate_multiply:
  * MCAD/array/along_curve.scad
@@ -119,6 +126,24 @@ module cutter() {
 	}
 }
 
+module lock_pegs() {
+	mcad_rotate_multiply(3) {
+		translate([((edge_l/2)/tan(30)),0,cookie_t+6-strut_w/3]) {
+			ccube([edge_w*2,strut_w,strut_w/3], center = X+Y);
+		}
+	}
+}
+
+module lock_holes() {
+	rotate([0,0,60]) {
+		mcad_rotate_multiply(3) {
+			translate([((edge_l/2)/tan(30))-strut_w*0.1,0,cookie_t+6-strut_w/3]) {
+				ccube([strut_w*0.4,strut_w,strut_w/3], center = X+Y);
+			}
+		}
+	}
+}
+
 module trimmer() {
 	linear_extrude(height = cookie_t+10) {
 		rotate([0,0,30]) {
@@ -154,17 +179,15 @@ module spokes() {
 }
 
 module branches() {
-	cuttify() {
-		hex() {
-			for(i = [1 : branch_n]) {
-				translate([0,(((edge_l/2)/sin(30))-(dot/2)-dot_dist-edge_w)*(i/(branch_n+1)),0]) {
+	hex() {
+		for(i = [1 : branch_n]) {
+			translate([0,(((edge_l/2)/sin(30))-(dot/2)-dot_dist-edge_w)*(i/(branch_n+1)),cookie_t*0.25]) {
+				rotate([0,0,branch_a]) {
+					ccube([branch_w,branch_l,cookie_t+1.5], center = [1,0,0]);
+				}
+				mirror([1,0,0]) {
 					rotate([0,0,branch_a]) {
-						square([branch_w,branch_l], center = [1,1,0]);
-					}
-					mirror([1,0,0]) {
-						rotate([0,0,branch_a]) {
-							square([branch_w,branch_l], center = [1,1,0]);
-						}
+						ccube([branch_w,branch_l,cookie_t+1.5], center = [1,0,0]);
 					}
 				}
 			}
@@ -174,13 +197,17 @@ module branches() {
 
 intersection() {
 	union() {
-		cutter();
+		difference() {
+			cutter();
+			lock_holes();
+		}
 		hub();
 		dots();
-		spokes();
 		branches();
+		spokes();
 	}
 	trimmer();
 }
+lock_pegs();
 
 // preview[view:south, tilt:bottom]
