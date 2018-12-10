@@ -5,9 +5,11 @@
   dwu <dyanawu@gmail.com>
 */
 
-
 use <MCAD/array/along_curve.scad>
+use <MCAD/array/polar.scad>
 use <MCAD/shapes/2Dshapes.scad>
+include <MCAD/units/metric.scad>
+
 //length of one edge of cookie
 edge_l = 20;
 
@@ -19,12 +21,13 @@ cookie_t = 6;
 
 //snowflake hub
 hub = 0;
+hub_s = 6;
 
 //snowflake dots
 dot = 0; // maximum of 0.43* edge_l if you want non-touching dots but who cares
 
 //distance of dots from corners
-dot_dist = 2;
+dot_dist = 0;
 
 //snowflake spoke length
 spoke_l = 20;
@@ -33,16 +36,16 @@ spoke_l = 20;
 spoke_w = 1;
 
 //snowflake branch length
-branch_l = 4;
+branch_l = 7;
 
 //snowflake branch angle
-branch_a = 300;
+branch_a = 60;
 
 //number of branches
-branch_n = 4;
+branch_n = 3;
 
 //branch snowflake branch width
-branch_w = 1;
+branch_w = 0.8;
 
 //support struts
 strut_l = ((edge_l/2)/tan(30))+(edge_w*3);
@@ -54,7 +57,6 @@ module hex() {
 	mcad_rotate_multiply(6)
 		children();
 }
-
 
 module cutter() {
 //cutter edge
@@ -80,6 +82,24 @@ module cutter() {
 	}
 }
 
+module lock_pegs() {
+	mcad_rotate_multiply(3) {
+		translate([((edge_l/2)/tan(30)),0,cookie_t+6-strut_w/3]) {
+			ccube([edge_w*2,strut_w,strut_w/3], center = X+Y);
+		}
+	}
+}
+
+module lock_holes() {
+	rotate([0,0,60]) {
+		mcad_rotate_multiply(3) {
+			translate([((edge_l/2)/tan(30))-strut_w*0.1,0,cookie_t+6-strut_w/3]) {
+				ccube([strut_w*0.4,strut_w,strut_w/3], center = X+Y);
+			}
+		}
+	}
+}
+
 module trimmer() {
 	linear_extrude(height = cookie_t+10) {
 		rotate([0,0,30]) {
@@ -97,7 +117,7 @@ module cuttify() {
 
 module hub() {
 	cuttify() {
-		circle(hub);
+		circle(hub, $fn = hub_s);
 	}
 }
 
@@ -122,25 +142,28 @@ module spokes() {
 }
 
 module branches() {
-		hex() {
-			for(i = [1 : branch_n]) {
-				translate([0,(((edge_l/2)/sin(30))-(dot/2)-dot_dist-edge_w)*(i/(branch_n+1)),0]) {
+	hex() {
+		for(i = [1 : branch_n]) {
+			translate([0,(((edge_l/2)/sin(30))-(dot/2)-dot_dist-edge_w)*(i/(branch_n+1)),cookie_t*0.25]) {
+				rotate([0,0,branch_a]) {
+					ccube([branch_w,branch_l,cookie_t+1.5], center = [1,0,0]);
+				}
+				mirror([1,0,0]) {
 					rotate([0,0,branch_a]) {
-						ccube([branch_w,branch_l,cookie_t*1.5], center = [1,0,0]);
-					}
-					mirror([1,0,0]) {
-						rotate([0,0,branch_a]) {
-							ccube([branch_w,branch_l,cookie_t*1.5], center = [1,0,0]);
-						}
+						ccube([branch_w,branch_l,cookie_t+1.5], center = [1,0,0]);
 					}
 				}
 			}
 		}
 	}
+}
 
 intersection() {
 	union() {
-		cutter();
+		difference() {
+			cutter();
+			lock_holes();
+		}
 		hub();
 		dots();
 		branches();
@@ -148,3 +171,4 @@ intersection() {
 	}
 	trimmer();
 }
+lock_pegs();
