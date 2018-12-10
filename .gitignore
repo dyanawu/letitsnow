@@ -1,0 +1,4 @@
+#ignore 3dp stuff
+*.stl
+*.gcode
+*.x3g
