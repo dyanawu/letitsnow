@@ -13,35 +13,36 @@ include <MCAD/units/metric.scad>
 edge_l = 25;
 
 //cutter edge thickness
-edge_w = 1;
+edge_w = 0.8;
 
 //raw cookie dough thickness
 cookie_t = 6;
 
 //snowflake hub
-hub = 0;
+hub = 3;
 hub_s = 6;
 
 //snowflake dots
-dot = 0; // maximum of 0.43* edge_l if you want non-touching dots but who cares
+dot = 6; // maximum of 0.43* edge_l if you want non-touching dots but who cares
+dot_s = 6;
 
 //distance of dots from corners
-dot_dist = 0;
+dot_dist = 2;
 
 //snowflake spoke length
-spoke_l = 20;
+spoke_l = 22;
 
 //snowflake spoke width
-spoke_w = 1;
+spoke_w = 0.8;
 
 //snowflake branch length
-branch_l = 7;
+branch_l = 10;
 
 //snowflake branch angle
-branch_a = 60;
+branch_a = 35;
 
 //number of branches
-branch_n = 3;
+branch_n = 4;
 
 //branch snowflake branch width
 branch_w = 0.8;
@@ -124,7 +125,7 @@ module dots() {
 	cuttify() {
 		hex() {
 			translate([0,((edge_l/2)/sin(30))-(dot/2)-dot_dist-edge_w,0]) {
-				circle(r = dot/2);
+				circle(r = dot/2, $fn = dot_s);
 			}
 		}
 	}
