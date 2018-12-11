@@ -19,27 +19,27 @@ edge_w = 0.8;
 cookie_t = 6;
 
 //snowflake hub
-hub = 3;
-hub_s = 6;
+hub = 1.5;
+hub_s = 50;
 
 //snowflake dots
-dot = 6; // maximum of 0.43* edge_l if you want non-touching dots but who cares
-dot_s = 6;
+dot = 3; // maximum of 0.43* edge_l if you want non-touching dots but who cares
+dot_s = 50;
 
 //distance of dots from corners
 dot_dist = 2;
 
 //snowflake spoke length
-spoke_l = 22;
+spoke_l = 20;
 
 //snowflake spoke width
 spoke_w = 0.8;
 
 //snowflake branch length
-branch_l = 10;
+branch_l = 5;
 
 //snowflake branch angle
-branch_a = 35;
+branch_a = 120;
 
 //number of branches
 branch_n = 4;
@@ -158,6 +158,7 @@ module branches() {
 	}
 }
 
+rotate(X*180) {
 intersection() {
 	union() {
 		difference() {
@@ -172,3 +173,4 @@ intersection() {
 	trimmer();
 }
 lock_pegs();
+}
