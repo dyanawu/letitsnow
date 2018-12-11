@@ -8,50 +8,7 @@
 use <MCAD/array/along_curve.scad>
 use <MCAD/shapes/2Dshapes.scad>
 include <MCAD/units/metric.scad>
-
-//length of one edge of cookie
-edge_l = 25;
-
-//cutter edge thickness
-edge_w = 0.8;
-
-//raw cookie dough thickness
-cookie_t = 6;
-
-//snowflake hub
-hub = 1.5;
-hub_s = 50;
-
-//snowflake dots
-dot = 3; // maximum of 0.43* edge_l if you want non-touching dots but who cares
-dot_s = 50;
-
-//distance of dots from corners
-dot_dist = 2;
-
-//snowflake spoke length
-spoke_l = 20;
-
-//snowflake spoke width
-spoke_w = 0.8;
-
-//snowflake branch length
-branch_l = 5;
-
-//snowflake branch angle
-branch_a = 120;
-
-//number of branches
-branch_n = 4;
-
-//branch snowflake branch width
-branch_w = 0.8;
-
-//support struts
-strut_l = ((edge_l/2)/tan(30))+(edge_w*3);
-strut_w = 4;
-
-$fn = 50;
+include <snowflake_config.scad>
 
 module hex() {
 	mcad_rotate_multiply(6)
@@ -158,19 +115,21 @@ module branches() {
 	}
 }
 
-rotate(X*180) {
-intersection() {
-	union() {
-		difference() {
-			cutter();
-			lock_holes();
+translate(Z*(cookie_t+8)) {
+	rotate(X*180) {
+		intersection() {
+			union() {
+				difference() {
+					cutter();
+					lock_holes();
+				}
+				hub();
+				dots();
+				branches();
+				spokes();
+			}
+			trimmer();
 		}
-		hub();
-		dots();
-		branches();
-		spokes();
+		lock_pegs();
 	}
-	trimmer();
-}
-lock_pegs();
 }
