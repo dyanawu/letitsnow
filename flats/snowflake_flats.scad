@@ -25,18 +25,18 @@ module border() {
 	}
 }
 
-module dots() {
-	hex() {
-		translate([0,((edge_l/2)/sin(30))-(dot/2)-dot_dist-edge_w,0]) {
-			circle(r = dot/2, $fn = dot_s);
-		}
-	}
-}
-
 module spokes() {
 	hex() {
 		translate([-spoke_w/2,0,0]) {
 			square([spoke_w, spoke_l]);
+		}
+	}
+}
+
+module dots() {
+	hex() {
+		translate([0,((edge_l/2)/sin(30))-(dot/2)-dot_dist-edge_w,0]) {
+			circle(r = dot/2, $fn = dot_s);
 		}
 	}
 }
@@ -46,11 +46,11 @@ module branches() {
 		for(i = [1 : branch_n]) {
 			translate([0,(((edge_l/2)/sin(30))-(dot/2)-dot_dist-edge_w)*(i/(branch_n+1)),0]) {
 				rotate([0,0,branch_a]) {
-					ccube([branch_w,branch_l-(i+i),height], center = [1,0,0]);
+					csquare([branch_w,branch_l-(i+i)], center = [1,0]);
 				}
 				mirror([1,0,0]) {
 					rotate([0,0,branch_a]) {
-						ccube([branch_w,branch_l-(i+i),height], center = [1,0,0]);
+						csquare([branch_w,branch_l-(i+i)], center = [1,0]);
 					}
 				}
 			}
@@ -72,14 +72,14 @@ module hanger_hole() {
 
 
 difference() {
-	union() {
-		linear_extrude(height = height) {
-			border();
+	linear_extrude(height = height) {
+		union() {
 			hanger();
+			border();
 			spokes();
 			dots();
+			branches();
 		}
-		branches();
 	}
 	hanger_hole();
 }
