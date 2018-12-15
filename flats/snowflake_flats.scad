@@ -70,15 +70,25 @@ module hanger_hole() {
 	}
 }
 
+module trimmer() {
+	rotate([0,0,30]) {
+		circle(r = edge_l, $fn = 6);
+	}
+}
 
 difference() {
 	linear_extrude(height = height) {
 		union() {
 			hanger();
-			border();
-			spokes();
-			dots();
-			branches();
+			intersection() {
+				union() {
+					border();
+					spokes();
+					dots();
+					branches();
+				}
+				trimmer();
+			}
 		}
 	}
 	hanger_hole();

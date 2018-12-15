@@ -22,7 +22,7 @@ dot_s = (rands(3,12,1)[0]);
 dot_dist = (rands(0,3,1)[0]);
 
 //snowflake spoke length
-spoke_l = ((edge_l/2)/tan(30))+(edge_w*2);
+spoke_l = edge_l-edge_w;
 
 //snowflake spoke width
 spoke_w = 1.6;
