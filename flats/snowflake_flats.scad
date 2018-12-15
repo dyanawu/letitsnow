@@ -16,43 +16,28 @@ module hex() {
 }
 
 module border() {
-	linear_extrude(height = height) {
-		rotate([0,0,30]) {
-			hex() {
-				translate([-edge_l/2,((edge_l/2)/tan(30))-edge_w,0]) {
-					square([edge_l,edge_w]);
-				}
-			}
-		}
-	}
-	cylinder(r = hub/2, h = height, $fn = hub_s);
-}
-
-module border2() {
 	$fn = 6;
-	linear_extrude(height = height) {
-		rotate([0,0,30]) {
-			difference() {
-				circle(r = edge_l);
-				circle(r = edge_l-(edge_w*2));
-			}
+	rotate([0,0,30]) {
+		difference() {
+			circle(r = edge_l);
+			circle(r = edge_l-(edge_w*2));
 		}
 	}
 }
 
 module dots() {
-		hex() {
-			translate([0,((edge_l/2)/sin(30))-(dot/2)-dot_dist-edge_w,0]) {
-				cylinder(r = dot/2, h = height, $fn = dot_s);
-			}
+	hex() {
+		translate([0,((edge_l/2)/sin(30))-(dot/2)-dot_dist-edge_w,0]) {
+			circle(r = dot/2, $fn = dot_s);
+		}
 	}
 }
 
 module spokes() {
-		hex() {
-			translate([-spoke_w/2,0,0]) {
-				cube([spoke_w, spoke_l, height]);
-			}
+	hex() {
+		translate([-spoke_w/2,0,0]) {
+			square([spoke_w, spoke_l]);
+		}
 	}
 }
 
@@ -74,23 +59,26 @@ module branches() {
 }
 
 module hanger() {
-		translate([0,((edge_l/2)/sin(30))+edge_w,0]) {
-				cylinder(r = edge_w*2, h = height, $fn=30);
+	translate([0,((edge_l/2)/sin(30))+edge_w,0]) {
+		circle(r = edge_w*2,, $fn=30);
 	}
 }
 				
 module hanger_hole() {
-		translate([0,((edge_l/2)/sin(30))+edge_w,-0.5]) {
-			cylinder(r = edge_w*1, h = height+1,  $fn=30);
+	translate([0,((edge_l/2)/sin(30))+edge_w,-0.5]) {
+		cylinder(r = edge_w*1, h = height+1,  $fn=30);
 	}
 }
 
+
 difference() {
 	union() {
-		border2();
-		hanger();
-		spokes();
-		dots();
+		linear_extrude(height = height) {
+			border();
+			hanger();
+			spokes();
+			dots();
+		}
 		branches();
 	}
 	hanger_hole();

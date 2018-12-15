@@ -32,13 +32,13 @@ spoke_l = ((edge_l/2)/tan(30))+(edge_w*3);
 spoke_w = 1.6;
 
 //snowflake branch angle
-branch_a = (rands(20,145,1)[0]);
+branch_a = (rands(30,145,1)[0]);
 
 //snowflake branch length
 branch_l = (rands(edge_l/3,edge_l,1)[0]);
 
 //number of branches
-branch_n = (rands(0,6,1)[0]);
+branch_n = (rands(0,5,1)[0]);
 
 //branch snowflake branch width
 branch_w = 1.2;
